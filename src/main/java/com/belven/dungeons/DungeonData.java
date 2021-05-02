@@ -9,7 +9,19 @@ public class DungeonData extends ArenaData {
 	private ArrayList<EntityType> enemies = new ArrayList<>();
 
 	public DungeonData() {
-		// TODO Auto-generated constructor stub
+
+	}
+
+	@Override
+	public void load(Dungeons d, String name, FileConfiguration fc) {
+		setName(name);
+		setWorld(d.getServer().getWorld(fc.getString("Dungeons." + name + ".World")));
+		setStartLoc(d.StringToLocation(fc.getString("Dungeons." + name + ".StartLocation"), getWorld()));
+		setEndLoc(d.StringToLocation(fc.getString("Dungeons." + name + ".EndLocation"), getWorld()));
+
+		for (String enemyType : fc.getString("Dungeons." + name + ".Enemies").split("@E")) {
+			getEnemies().add(EntityType.fromName(enemyType));
+		}
 	}
 
 	@Override
@@ -21,7 +33,6 @@ public class DungeonData extends ArenaData {
 
 			FileConfiguration con = plug.getConfig();
 
-			getPlugin().getLogger().info("Dungeon Name: " + getName());
 			con.set("Dungeons", getName());
 
 			if (getWorld() != null)
@@ -41,7 +52,7 @@ public class DungeonData extends ArenaData {
 
 			// Sheep@ESkeleton@ECreeper
 			if (sb.toString().length() > 2)
-				con.set("Dungeons." + getName() + ".enemies", sb.toString().substring(2));
+				con.set("Dungeons." + getName() + ".Enemies", sb.toString().substring(2));
 
 			plug.saveConfig();
 		}
@@ -58,4 +69,5 @@ public class DungeonData extends ArenaData {
 	public void setEnemies(ArrayList<EntityType> enemies) {
 		this.enemies = enemies;
 	}
+
 }

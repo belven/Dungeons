@@ -1,5 +1,7 @@
 package com.belven.dungeons;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 public class PvPArenaData extends ArenaData {
 
 	public PvPArenaData() {
@@ -8,6 +10,12 @@ public class PvPArenaData extends ArenaData {
 
 	@Override
 	public void update() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void load(Dungeons d, String name, FileConfiguration fc) {
 		// TODO Auto-generated method stub
 
 	}

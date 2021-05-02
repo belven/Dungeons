@@ -79,7 +79,7 @@ public class Dungeons extends JavaPlugin {
 		return false;
 	}
 
-	private Location StringToLocation(String s, World world) {
+	public Location StringToLocation(String s, World world) {
 		Location tempLoc;
 		String[] strings = s.split(",");
 
@@ -121,6 +121,21 @@ public class Dungeons extends JavaPlugin {
 
 		for (BCommand command : commands.values()) {
 			command.setPlugin(this);
+		}
+
+		loadDungeons();
+	}
+
+	private void loadDungeons() {
+		if (getConfig().contains("Dungeons")) {
+
+			for (String g : getConfig().getConfigurationSection("Dungeons").getKeys(false)) {
+				Dungeon d = new Dungeon();
+				DungeonData dd = new DungeonData();
+				dd.load(this, g, getConfig());
+				d.setData(dd);
+				dungeons.add(d);
+			}
 		}
 	}
 

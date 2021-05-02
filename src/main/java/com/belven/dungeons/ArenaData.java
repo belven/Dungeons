@@ -2,6 +2,7 @@ package com.belven.dungeons;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public abstract class ArenaData {
 	private Dungeons plugin;
@@ -40,6 +41,8 @@ public abstract class ArenaData {
 	}
 
 	public abstract void update();
+
+	public abstract void load(Dungeons d, String name, FileConfiguration fc);
 
 	public Location getStartLoc() {
 		return startLoc;
