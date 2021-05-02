@@ -1,0 +1,34 @@
+name: Dungeons
+main: com.belven.dungeons.Dungeons
+version: 0.1
+commands:
+   test:
+      description: This is a demo command.
+      usage: /test
+      permission: BelvensDungeons.test
+      permission-message: You don't have BelvensDungeons.test
+   createdungeon:
+      description: This is a demo command.
+      usage: /createdungeon {name}
+      permission: BelvensDungeons.test
+      permission-message: You don't have BelvensDungeons.test
+   setstartlocation:
+      description: This is a demo command.
+      usage: /setstartlocation {name}
+      permission: BelvensDungeons.test
+      permission-message: You don't have BelvensDungeons.test
+   setendlocation:
+      description: This is a demo command.
+      usage: /setendlocation {name}
+      permission: BelvensDungeons.test
+      permission-message: You don't have BelvensDungeons.test
+   addenemy:
+      description: This is a demo command.
+      usage: /addenemy {dungeon name} {enemy name}
+      permission: BelvensDungeons.test
+      permission-message: You don't have BelvensDungeons.test
+   startarena:
+      description: This is a demo command.
+      usage: /startarena {arena name}
+      permission: BelvensDungeons.test
+      permission-message: You don't have BelvensDungeons.test
