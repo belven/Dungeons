@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.belven.dungeons.Dungeon;
+import com.belven.dungeons.DungeonData;
 
 public class DungeonCreateCommand extends BCommand {
 	static public String B_COMMAND_TEXT = "createdungeon";
@@ -21,7 +22,7 @@ public class DungeonCreateCommand extends BCommand {
 			String dungeonName = args[0];
 
 			if (!getPlugin().dungeonExists(dungeonName)) {
-				Dungeon d = new Dungeon(dungeonName, getPlugin());
+				Dungeon d = new Dungeon(dungeonName, getPlugin(), new DungeonData(getPlugin()));
 				getPlugin().addDungeon(d);
 				d.getData().setWorld(p.getWorld());
 

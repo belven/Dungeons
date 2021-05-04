@@ -8,16 +8,18 @@ import org.bukkit.entity.EntityType;
 public class DungeonData extends ArenaData {
 	private ArrayList<EntityType> enemies = new ArrayList<>();
 
-	public DungeonData() {
-
+	public DungeonData(Dungeons dungeons) {
+		setPlugin(dungeons);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void load(Dungeons d, String name, FileConfiguration fc) {
 		setName(name);
 		setWorld(d.getServer().getWorld(fc.getString("Dungeons." + name + ".World")));
 		setStartLoc(d.StringToLocation(fc.getString("Dungeons." + name + ".StartLocation"), getWorld()));
 		setEndLoc(d.StringToLocation(fc.getString("Dungeons." + name + ".EndLocation"), getWorld()));
+		setRewardChest(d.StringToLocation(fc.getString("Dungeons." + name + ".RewardChest"), getWorld()));
 
 		for (String enemyType : fc.getString("Dungeons." + name + ".Enemies").split("@E")) {
 			getEnemies().add(EntityType.fromName(enemyType));
@@ -43,6 +45,9 @@ public class DungeonData extends ArenaData {
 
 			if (getEndLoc() != null)
 				con.set("Dungeons." + getName() + ".EndLocation", plug.LocationToString(getEndLoc()));
+
+			if (getRewardChest() != null)
+				con.set("Dungeons." + getName() + ".RewardChest", plug.LocationToString(getRewardChest()));
 
 			StringBuilder sb = new StringBuilder();
 

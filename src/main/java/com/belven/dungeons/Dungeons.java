@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.belven.dungeons.commands.ArenaSetEndLocationCommand;
@@ -16,11 +17,16 @@ import com.belven.dungeons.commands.ArenaSetStartLocationCommand;
 import com.belven.dungeons.commands.BCommand;
 import com.belven.dungeons.commands.DungeonCreateCommand;
 import com.belven.dungeons.commands.EnemyAddCommand;
+import com.belven.dungeons.commands.SetRewardsCommand;
 import com.belven.dungeons.commands.StartArenaCommand;
+import com.belven.dungeons.listeners.MobListener;
 
 public class Dungeons extends JavaPlugin {
+	private final MobListener mobListener = new MobListener(this);
+
 	static HashMap<String, BCommand> commands = new HashMap<>();
-	ArrayList<Dungeon> dungeons = new ArrayList<Dungeon>();
+	private ArrayList<Dungeon> dungeons = new ArrayList<Dungeon>();
+	private ArrayList<ActiveArena> activeArenas = new ArrayList<ActiveArena>();
 
 	static {
 		commands.put(DungeonCreateCommand.B_COMMAND_TEXT, new DungeonCreateCommand());
@@ -28,10 +34,11 @@ public class Dungeons extends JavaPlugin {
 		commands.put(ArenaSetEndLocationCommand.B_COMMAND_TEXT, new ArenaSetEndLocationCommand());
 		commands.put(EnemyAddCommand.B_COMMAND_TEXT, new EnemyAddCommand());
 		commands.put(StartArenaCommand.B_COMMAND_TEXT, new StartArenaCommand());
+		commands.put(SetRewardsCommand.B_COMMAND_TEXT, new SetRewardsCommand());
 	}
 
 	public Dungeons() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public static int getRandomIndex(Object[] array) {
@@ -80,23 +87,27 @@ public class Dungeons extends JavaPlugin {
 	}
 
 	public Location StringToLocation(String s, World world) {
-		Location tempLoc;
-		String[] strings = s.split(",");
+		Location tempLoc = null;
 
-		int x = 0;
-		int y = 0;
-		int z = 0;
+		if (s != null) {
+			String[] strings = s.split(",");
 
-		try {
-			x = Integer.valueOf(strings[0].trim());
-			y = Integer.valueOf(strings[1].trim());
-			z = Integer.valueOf(strings[2].trim());
+			int x = 0;
+			int y = 0;
+			int z = 0;
 
-		} catch (NumberFormatException e) {
+			try {
+				x = Integer.valueOf(strings[0].trim());
+				y = Integer.valueOf(strings[1].trim());
+				z = Integer.valueOf(strings[2].trim());
 
+			} catch (NumberFormatException e) {
+
+			}
+
+			tempLoc = new Location(world, x, y, z);
 		}
 
-		tempLoc = new Location(world, x, y, z);
 		return tempLoc;
 	}
 
@@ -118,6 +129,8 @@ public class Dungeons extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		super.onEnable();
+		PluginManager pm = getServer().getPluginManager();
+		pm.registerEvents(mobListener, this);
 
 		for (BCommand command : commands.values()) {
 			command.setPlugin(this);
@@ -131,7 +144,7 @@ public class Dungeons extends JavaPlugin {
 
 			for (String g : getConfig().getConfigurationSection("Dungeons").getKeys(false)) {
 				Dungeon d = new Dungeon();
-				DungeonData dd = new DungeonData();
+				DungeonData dd = new DungeonData(this);
 				dd.load(this, g, getConfig());
 				d.setData(dd);
 				dungeons.add(d);
@@ -168,5 +181,29 @@ public class Dungeons extends JavaPlugin {
 			}
 		}
 		return false;
+	}
+
+	public void addActiveArena(ActiveArena aa) {
+		activeArenas.add(aa);
+	}
+
+	public ArrayList<Dungeon> getDungeons() {
+		return dungeons;
+	}
+
+	public void setDungeons(ArrayList<Dungeon> dungeons) {
+		this.dungeons = dungeons;
+	}
+
+	public ArrayList<ActiveArena> getActiveArenas() {
+		return activeArenas;
+	}
+
+	public void setActiveArenas(ArrayList<ActiveArena> activeArenas) {
+		this.activeArenas = activeArenas;
+	}
+
+	public void removeActiveArena(ActiveDungeon activeDungeon) {
+		activeArenas.remove(activeDungeon);
 	}
 }

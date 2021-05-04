@@ -10,6 +10,7 @@ public abstract class ArenaData {
 	private World world = null;
 	private Location endLoc = null;
 	private Location startLoc = null;
+	private Location rewardChest = null;
 	private boolean isActive = false;
 
 	public ArenaData() {
@@ -66,6 +67,14 @@ public abstract class ArenaData {
 
 	public void setWorld(World world) {
 		this.world = world;
+	}
+
+	public Location getRewardChest() {
+		return rewardChest;
+	}
+
+	public void setRewardChest(Location rewardChest) {
+		this.rewardChest = rewardChest;
 	}
 
 }
