@@ -37,3 +37,13 @@ commands:
       usage: /setrewards {arena name}
       permission: BelvensDungeons.test
       permission-message: You don't have BelvensDungeons.test
+   cleararena:
+      description: This is a demo command.
+      usage: /cleararena {arena name}
+      permission: BelvensDungeons.test
+      permission-message: You don't have BelvensDungeons.test
+   teleportenemy:
+      description: This is a demo command.
+      usage: /teleportenemy {arena name}
+      permission: BelvensDungeons.test
+      permission-message: You don't have BelvensDungeons.test

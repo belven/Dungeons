@@ -12,7 +12,9 @@ D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\DungeonData.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\SetWaveMaxCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\EnemyRemoveCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\SetRewardsCommand.java
+D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\TeleportEnemyCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\DungeonCreateCommand.java
+D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\ArenaClearCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\ArenaSetStartLocationCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\ArenaSetEndLocationCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\listeners\MobListener.java

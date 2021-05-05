@@ -72,4 +72,16 @@ public abstract class ActiveArena {
 	public void setSpawnableLocs(ArrayList<Location> spawnableLocs) {
 		this.spawnableLocs = spawnableLocs;
 	}
+
+	public boolean contains(Player p) {
+		return players.contains(p);
+	}
+
+	public boolean contains(Location location) {
+		for (Location l : getSpawnableLocs()) {
+			if (l.equals(location))
+				return true;
+		}
+		return false;
+	}
 }

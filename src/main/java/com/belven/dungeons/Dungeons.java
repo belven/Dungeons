@@ -12,13 +12,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.belven.dungeons.commands.ArenaClearCommand;
 import com.belven.dungeons.commands.ArenaSetEndLocationCommand;
 import com.belven.dungeons.commands.ArenaSetStartLocationCommand;
 import com.belven.dungeons.commands.BCommand;
 import com.belven.dungeons.commands.DungeonCreateCommand;
 import com.belven.dungeons.commands.EnemyAddCommand;
+import com.belven.dungeons.commands.EnemyRemoveCommand;
 import com.belven.dungeons.commands.SetRewardsCommand;
 import com.belven.dungeons.commands.StartArenaCommand;
+import com.belven.dungeons.commands.TeleportEnemyCommand;
 import com.belven.dungeons.listeners.MobListener;
 
 public class Dungeons extends JavaPlugin {
@@ -33,8 +36,12 @@ public class Dungeons extends JavaPlugin {
 		commands.put(ArenaSetStartLocationCommand.B_COMMAND_TEXT, new ArenaSetStartLocationCommand());
 		commands.put(ArenaSetEndLocationCommand.B_COMMAND_TEXT, new ArenaSetEndLocationCommand());
 		commands.put(EnemyAddCommand.B_COMMAND_TEXT, new EnemyAddCommand());
+		commands.put(EnemyRemoveCommand.B_COMMAND_TEXT, new EnemyRemoveCommand());
 		commands.put(StartArenaCommand.B_COMMAND_TEXT, new StartArenaCommand());
 		commands.put(SetRewardsCommand.B_COMMAND_TEXT, new SetRewardsCommand());
+		commands.put(ArenaClearCommand.B_COMMAND_TEXT, new ArenaClearCommand());
+		commands.put(TeleportEnemyCommand.B_COMMAND_TEXT, new TeleportEnemyCommand());
+
 	}
 
 	public Dungeons() {
@@ -184,7 +191,8 @@ public class Dungeons extends JavaPlugin {
 	}
 
 	public void addActiveArena(ActiveArena aa) {
-		activeArenas.add(aa);
+		if (!activeArenas.contains(aa))
+			activeArenas.add(aa);
 	}
 
 	public ArrayList<Dungeon> getDungeons() {
@@ -203,7 +211,17 @@ public class Dungeons extends JavaPlugin {
 		this.activeArenas = activeArenas;
 	}
 
-	public void removeActiveArena(ActiveDungeon activeDungeon) {
-		activeArenas.remove(activeDungeon);
+	public void removeActiveArena(ActiveArena aa) {
+		if (activeArenas.contains(aa))
+			activeArenas.remove(aa);
+	}
+
+	public ActiveArena getActiveArena(String name) {
+		for (ActiveArena aa : getActiveArenas()) {
+			if (aa.getArena().getData().getName().equals(name)) {
+				return aa;
+			}
+		}
+		return null;
 	}
 }

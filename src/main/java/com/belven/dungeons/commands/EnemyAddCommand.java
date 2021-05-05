@@ -37,6 +37,5 @@ public class EnemyAddCommand extends BCommand {
 		} else {
 			p.sendMessage("Not enough args '//addenemy {dungeonname} {type}'");
 		}
-
 	}
 }

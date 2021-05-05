@@ -1,16 +1,18 @@
 package com.belven.dungeons;
 
+import java.util.ArrayList;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 public class ActiveDungeon extends ActiveArena {
-	int enemiesLeft = 0;
+	private ArrayList<LivingEntity> entities = new ArrayList<>();
+	int wavesLeft = 0;
 
 	public ActiveDungeon(Dungeon inDungeon) {
 		super(inDungeon);
@@ -22,17 +24,25 @@ public class ActiveDungeon extends ActiveArena {
 	}
 
 	public void entityKilled(LivingEntity entity) {
-		enemiesLeft--;
+		entities.remove(entity);
 
-		if (enemiesLeft == 0) {
-			giveRewards();
-			clearArena();
-			deactivate();
+		if (entities.size() == 0) {
+			if (wavesLeft == 0) {
+				giveRewards();
+				clearArena();
+				deactivate();
+			} else {
+				spawnWave();
+			}
 		}
 
 		for (Player p : getPlayers()) {
-			p.sendMessage("Arena mob killed " + enemiesLeft + " left to kill!");
+			p.sendMessage("Arena mob killed " + entities.size() + " left to kill and " + wavesLeft + " waves left to go!");
 		}
+	}
+
+	public boolean contains(LivingEntity le) {
+		return entities.contains(le);
 	}
 
 	@Override
@@ -75,6 +85,7 @@ public class ActiveDungeon extends ActiveArena {
 
 	public synchronized void spawnWave() {
 		int enemiesToSpawn = 10;
+		wavesLeft--;
 
 		for (int i = 0; i < enemiesToSpawn; i++) {
 			setSpawnableLocs(getDungeon().getSpawnableLocations());
@@ -83,15 +94,17 @@ public class ActiveDungeon extends ActiveArena {
 
 			DungeonData dd = getDungeonData();
 			int rand2 = Dungeons.getRandomIndex(dd.getEnemies());
-			Entity e = getDungeonData().getWorld().spawnEntity(l, dd.getEnemies().get(rand2));
+			LivingEntity e = (LivingEntity) getDungeonData().getWorld().spawnEntity(l, dd.getEnemies().get(rand2));
 			e.setMetadata("DungeonMob", new FixedMetadataValue(getDungeonData().getPlugin(), this));
-			enemiesLeft++;
+			entities.add(e);
 		}
 	}
 
 	@Override
 	public synchronized void activate() {
+		getDungeonData().getPlugin().addActiveArena(this);
 		spawnWave();
+		wavesLeft = 1;
 	}
 
 	@Override
@@ -105,10 +118,28 @@ public class ActiveDungeon extends ActiveArena {
 		}
 
 		getSpawnableLocs().clear();
+		entities.clear();
 	}
 
 	@Override
 	public synchronized void deactivate() {
 		getDungeonData().getPlugin().removeActiveArena(this);
+	}
+
+	public ArrayList<LivingEntity> getEntities() {
+		return entities;
+	}
+
+	public void setEntities(ArrayList<LivingEntity> entities) {
+		this.entities = entities;
+	}
+
+	public void teleportEnemies() {
+		for (LivingEntity le : getEntities()) {
+			int rand = Dungeons.getRandomIndex(getSpawnableLocs());
+			Location l = getSpawnableLocs().get(rand);
+
+			le.teleport(l);
+		}
 	}
 }

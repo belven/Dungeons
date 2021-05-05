@@ -35,8 +35,6 @@ public class DungeonData extends ArenaData {
 
 			FileConfiguration con = plug.getConfig();
 
-			con.set("Dungeons", getName());
-
 			if (getWorld() != null)
 				con.set("Dungeons." + getName() + ".World", getWorld().getName());
 
@@ -66,6 +64,11 @@ public class DungeonData extends ArenaData {
 	public void addEnemy(EntityType et) {
 		enemies.add(et);
 	}
+
+	public void removeEnemy(EntityType et) {
+		enemies.remove(et);
+	}
+
 
 	public ArrayList<EntityType> getEnemies() {
 		return enemies;

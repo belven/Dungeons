@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.EntityTransformEvent;
 
 import com.belven.dungeons.ActiveArena;
 import com.belven.dungeons.ActiveDungeon;
@@ -40,6 +41,16 @@ public class MobListener implements Listener {
 		}
 	}
 
+	@EventHandler
+	public void onEntityTransformEvent(EntityTransformEvent event) {
+		if (event.getEntity().hasMetadata("DungeonMob")) {
+
+			for (Entity e : event.getTransformedEntities()) {
+				e.setMetadata("DungeonMob", event.getEntity().getMetadata("DungeonMob").get(0));
+			}
+		}
+	}
+
 	public static LivingEntity GetDamager(LivingEntity le) {
 		if (le.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
 			return GetDamager((EntityDamageByEntityEvent) le.getLastDamageCause());
@@ -60,7 +71,7 @@ public class MobListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntitySpawnEvent(EntitySpawnEvent event) {
 		for (ActiveArena aa : plugin.getActiveArenas()) {
-			if (aa.getSpawnableLocs().contains(event.getLocation())) {
+			if (aa.contains(event.getLocation())) {
 				event.setCancelled(false);
 			}
 		}

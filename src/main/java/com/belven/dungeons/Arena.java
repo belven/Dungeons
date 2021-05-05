@@ -49,7 +49,7 @@ public abstract class Arena {
 					Location feetL = new Location(w, x, y + 1, z);
 					Location headL = new Location(w, x, y + 2, z);
 
-					if (floorL.getBlock().getType() != Material.AIR && feetL.getBlock().getType() == Material.AIR && headL.getBlock().getType() == Material.AIR) {
+					if (floorL.getBlock().getType() != Material.AIR && isAir(feetL) && isAir(headL)) {
 						spawnableLocs.add(feetL);
 					}
 				}
@@ -57,5 +57,9 @@ public abstract class Arena {
 		}
 
 		return spawnableLocs;
+	}
+
+	private boolean isAir(Location l) {
+		return l.getBlock().getType() == Material.AIR;
 	}
 }
