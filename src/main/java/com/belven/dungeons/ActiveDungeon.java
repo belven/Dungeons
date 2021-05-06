@@ -33,12 +33,39 @@ public class ActiveDungeon extends ActiveArena {
 				deactivate();
 			} else {
 				spawnWave();
+
+				if (wavesLeft == 0) {
+					spawnBoss();
+				}
 			}
 		}
 
 		for (Player p : getPlayers()) {
 			p.sendMessage("Arena mob killed " + entities.size() + " left to kill and " + wavesLeft + " waves left to go!");
 		}
+	}
+
+	private void spawnBoss() {
+
+		DungeonData dd = getDungeonData();
+
+		LivingEntity e = (LivingEntity) getDungeonData().getWorld().spawnEntity(getRandomLocation(), dd.getBossType());
+		e.setMetadata("DungeonMob", new FixedMetadataValue(getDungeonData().getPlugin(), this));
+		entities.add(e);
+
+		Block block = getDungeonData().getBossChest().getBlock();
+		Chest bossChest = (Chest) block.getState();
+
+		if (bossChest != null) {
+			e.getEquipment().setArmorContents(bossChest.getInventory().getContents());
+
+//			for (ItemStack is : bossChest.getInventory().getContents()) {
+//				if (is == null) {
+//					continue;
+//				}			
+//			}
+		}
+
 	}
 
 	public boolean contains(LivingEntity le) {
@@ -89,12 +116,10 @@ public class ActiveDungeon extends ActiveArena {
 
 		for (int i = 0; i < enemiesToSpawn; i++) {
 			setSpawnableLocs(getDungeon().getSpawnableLocations());
-			int rand = Dungeons.getRandomIndex(getSpawnableLocs());
-			Location l = getSpawnableLocs().get(rand);
 
 			DungeonData dd = getDungeonData();
 			int rand2 = Dungeons.getRandomIndex(dd.getEnemies());
-			LivingEntity e = (LivingEntity) getDungeonData().getWorld().spawnEntity(l, dd.getEnemies().get(rand2));
+			LivingEntity e = (LivingEntity) getDungeonData().getWorld().spawnEntity(getRandomLocation(), dd.getEnemies().get(rand2));
 			e.setMetadata("DungeonMob", new FixedMetadataValue(getDungeonData().getPlugin(), this));
 			entities.add(e);
 		}
@@ -136,10 +161,18 @@ public class ActiveDungeon extends ActiveArena {
 
 	public void teleportEnemies() {
 		for (LivingEntity le : getEntities()) {
-			int rand = Dungeons.getRandomIndex(getSpawnableLocs());
-			Location l = getSpawnableLocs().get(rand);
-
-			le.teleport(l);
+			le.teleport(getRandomLocation());
 		}
+	}
+
+	private Location getRandomLocation() {
+		int rand = Dungeons.getRandomIndex(getSpawnableLocs());
+		Location l = getSpawnableLocs().get(rand);
+		return l;
+	}
+
+	@Override
+	public Location getRespawnPoint(Player p) {
+		return getRandomLocation();
 	}
 }

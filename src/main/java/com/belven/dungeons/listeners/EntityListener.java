@@ -1,5 +1,7 @@
 package com.belven.dungeons.listeners;
 
+import java.util.HashMap;
+
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -13,15 +15,23 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.MetadataValue;
 
 import com.belven.dungeons.ActiveArena;
 import com.belven.dungeons.ActiveDungeon;
 import com.belven.dungeons.Dungeons;
 
-public class MobListener implements Listener {
+public class EntityListener implements Listener {
+	public HashMap<String, ItemStack[]> playerInventories = new HashMap<>();
+	public HashMap<String, ItemStack[]> playerArmour = new HashMap<>();
+	public HashMap<String, ActiveArena> playerArena = new HashMap<>();
+
 	private final Dungeons plugin;
 
-	public MobListener(Dungeons instance) {
+	public EntityListener(Dungeons instance) {
 		plugin = instance;
 	}
 
@@ -46,7 +56,10 @@ public class MobListener implements Listener {
 		if (event.getEntity().hasMetadata("DungeonMob")) {
 
 			for (Entity e : event.getTransformedEntities()) {
-				e.setMetadata("DungeonMob", event.getEntity().getMetadata("DungeonMob").get(0));
+				MetadataValue metadataValue = event.getEntity().getMetadata("DungeonMob").get(0);
+				ActiveDungeon ad = (ActiveDungeon) metadataValue.value();
+				e.setMetadata("DungeonMob", metadataValue);
+				ad.getEntities().add((LivingEntity) event.getEntity()); // TODO Possible cast check needed
 			}
 		}
 	}
@@ -62,9 +75,43 @@ public class MobListener implements Listener {
 	@EventHandler
 	public void onEntityKilledEvent(EntityDeathEvent event) {
 		LivingEntity entity = event.getEntity();
+
 		if (entity.hasMetadata("DungeonMob")) {
 			ActiveDungeon ad = (ActiveDungeon) entity.getMetadata("DungeonMob").get(0).value();
 			ad.entityKilled(entity);
+		}
+	}
+
+	@EventHandler
+	public void onPlayerDeathEvent(PlayerDeathEvent event) {
+		Player p = event.getEntity();
+		ActiveArena aa = getPlugin().getPlayerArena(p);
+
+		if (aa != null) {
+			playerInventories.put(p.getName(), p.getInventory().getContents());
+			playerArmour.put(p.getName(), p.getInventory().getArmorContents());
+			playerArena.put(p.getName(), aa);
+			event.getDrops().clear();
+		}
+	}
+
+	@EventHandler
+	public void onPlayerRespawnEvent(PlayerRespawnEvent event) {
+		Player p = event.getPlayer();
+
+		if (playerArena.containsKey(p.getName())) {
+			event.setRespawnLocation(playerArena.get(p.getName()).getRespawnPoint(p));
+			playerArena.remove(p.getName());
+		}
+
+		if (playerInventories.containsKey(p.getName())) {
+			p.getInventory().setContents(playerInventories.get(p.getName()));
+			playerInventories.remove(p.getName());
+		}
+
+		if (playerArmour.containsKey(p.getName())) {
+			p.getInventory().setArmorContents(playerArmour.get(p.getName()));
+			playerArmour.remove(p.getName());
 		}
 	}
 

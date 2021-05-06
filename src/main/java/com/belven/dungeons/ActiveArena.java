@@ -84,4 +84,6 @@ public abstract class ActiveArena {
 		}
 		return false;
 	}
+
+	public abstract Location getRespawnPoint(Player p);
 }

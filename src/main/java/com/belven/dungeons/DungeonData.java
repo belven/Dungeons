@@ -2,11 +2,15 @@ package com.belven.dungeons;
 
 import java.util.ArrayList;
 
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 
 public class DungeonData extends ArenaData {
 	private ArrayList<EntityType> enemies = new ArrayList<>();
+	private EntityType bossType = null;
+	private Location bossChest = null;
 
 	public DungeonData(Dungeons dungeons) {
 		setPlugin(dungeons);
@@ -20,6 +24,8 @@ public class DungeonData extends ArenaData {
 		setStartLoc(d.StringToLocation(fc.getString("Dungeons." + name + ".StartLocation"), getWorld()));
 		setEndLoc(d.StringToLocation(fc.getString("Dungeons." + name + ".EndLocation"), getWorld()));
 		setRewardChest(d.StringToLocation(fc.getString("Dungeons." + name + ".RewardChest"), getWorld()));
+		setBossChest(d.StringToLocation(fc.getString("Dungeons." + name + ".BossChest"), getWorld()));
+		setBossType(EntityType.fromName(fc.getString("Dungeons." + name + ".BossType")));
 
 		for (String enemyType : fc.getString("Dungeons." + name + ".Enemies").split("@E")) {
 			getEnemies().add(EntityType.fromName(enemyType));
@@ -47,6 +53,12 @@ public class DungeonData extends ArenaData {
 			if (getRewardChest() != null)
 				con.set("Dungeons." + getName() + ".RewardChest", plug.LocationToString(getRewardChest()));
 
+			if (getBossChest() != null)
+				con.set("Dungeons." + getName() + ".BossChest", plug.LocationToString(getBossChest()));
+
+			if (getBossType() != null)
+				con.set("Dungeons." + getName() + ".BossType", getBossType().name());
+
 			StringBuilder sb = new StringBuilder();
 
 			for (EntityType et : enemies) {
@@ -69,13 +81,33 @@ public class DungeonData extends ArenaData {
 		enemies.remove(et);
 	}
 
-
 	public ArrayList<EntityType> getEnemies() {
 		return enemies;
 	}
 
 	public void setEnemies(ArrayList<EntityType> enemies) {
 		this.enemies = enemies;
+	}
+
+	public void setBoss(EntityType et, Block targetBlockExact) {
+		setBossType(et);
+		setBossChest(targetBlockExact.getLocation());
+	}
+
+	public EntityType getBossType() {
+		return bossType;
+	}
+
+	public void setBossType(EntityType bossType) {
+		this.bossType = bossType;
+	}
+
+	public Location getBossChest() {
+		return bossChest;
+	}
+
+	public void setBossChest(Location bossChest) {
+		this.bossChest = bossChest;
 	}
 
 }

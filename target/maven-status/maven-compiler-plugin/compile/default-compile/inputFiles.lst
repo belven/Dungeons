@@ -10,6 +10,7 @@ D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\SetSpecialEnemy
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\SetMobSpawnCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\DungeonData.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\SetWaveMaxCommand.java
+D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\listeners\EntityListener.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\EnemyRemoveCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\SetRewardsCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\TeleportEnemyCommand.java
@@ -17,14 +18,13 @@ D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\DungeonCreateCo
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\ArenaClearCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\ArenaSetStartLocationCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\ArenaSetEndLocationCommand.java
-D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\listeners\MobListener.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\BCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\StartArenaCommand.java
+D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\SetBossCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\PvPArenaData.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\ArenaData.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\SetSpecialWaveCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\SetBossEnemyCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\ActiveArena.java
-D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\SetBossWaveCommand.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\Dungeons.java
 D:\Minecraft\Dungeons\src\main\java\com\belven\dungeons\commands\SetPlayerSpawnCommand.java

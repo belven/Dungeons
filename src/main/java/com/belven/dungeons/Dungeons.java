@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,13 +20,14 @@ import com.belven.dungeons.commands.BCommand;
 import com.belven.dungeons.commands.DungeonCreateCommand;
 import com.belven.dungeons.commands.EnemyAddCommand;
 import com.belven.dungeons.commands.EnemyRemoveCommand;
+import com.belven.dungeons.commands.SetBossCommand;
 import com.belven.dungeons.commands.SetRewardsCommand;
 import com.belven.dungeons.commands.StartArenaCommand;
 import com.belven.dungeons.commands.TeleportEnemyCommand;
-import com.belven.dungeons.listeners.MobListener;
+import com.belven.dungeons.listeners.EntityListener;
 
 public class Dungeons extends JavaPlugin {
-	private final MobListener mobListener = new MobListener(this);
+	private final EntityListener mobListener = new EntityListener(this);
 
 	static HashMap<String, BCommand> commands = new HashMap<>();
 	private ArrayList<Dungeon> dungeons = new ArrayList<Dungeon>();
@@ -41,7 +43,7 @@ public class Dungeons extends JavaPlugin {
 		commands.put(SetRewardsCommand.B_COMMAND_TEXT, new SetRewardsCommand());
 		commands.put(ArenaClearCommand.B_COMMAND_TEXT, new ArenaClearCommand());
 		commands.put(TeleportEnemyCommand.B_COMMAND_TEXT, new TeleportEnemyCommand());
-
+		commands.put(SetBossCommand.B_COMMAND_TEXT, new SetBossCommand());
 	}
 
 	public Dungeons() {
@@ -66,23 +68,20 @@ public class Dungeons extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		String commandString = "";
 		commandString += command.getName();
+		Player p = (Player) sender;
 
 		for (String s : args) {
 			commandString += " ";
 			commandString += s;
 		}
 
-		getLogger().info("commandString = " + commandString);
-
 		if (commands.containsKey(command.getName())) {
-			getLogger().info("command.getName() = " + command.getName());
 			commands.get(command.getName()).PerformCommand(sender, command, label, args);
 			return true;
 		} else {
-
 			for (BCommand bCommand : commands.values()) {
 				if (commandString.contains(bCommand.getCommandText())) {
-					getLogger().info("bCommand.getCommandText() = " + bCommand.getCommandText());
+					getLogger().info(p.getName() + " ran the command " + bCommand.getCommandText());
 					bCommand.PerformCommand(sender, command, label, args);
 					return true;
 				}
@@ -129,7 +128,9 @@ public class Dungeons extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		// TODO Auto-generated method stub
+		for (ActiveArena aa : getActiveArenas()) {
+			aa.clearArena();
+		}
 		super.onDisable();
 	}
 
@@ -223,5 +224,23 @@ public class Dungeons extends JavaPlugin {
 			}
 		}
 		return null;
+	}
+
+	public ActiveArena getPlayerArena(Player p) {
+		for (ActiveArena aa : getActiveArenas()) {
+			if (aa.getPlayers().contains(p)) {
+				return aa;
+			}
+		}
+		return null;
+	}
+
+	public boolean isPlayerInArena(Player p) {
+		for (ActiveArena aa : getActiveArenas()) {
+			if (aa.getPlayers().contains(p)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
